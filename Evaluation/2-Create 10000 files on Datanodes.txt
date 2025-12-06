@@ -1,0 +1,71 @@
+cd /home/hduser
+
+cat > gen_text_files_hdfs_day2.py << 'EOF'
+#!/usr/bin/env python3
+import sys
+import subprocess
+import random
+
+TARGET_MB = 64
+TARGET_BYTES = TARGET_MB * 1024 * 1024
+
+# Small vocabulary to generate varied text
+WORDS = [
+    "hadoop", "data", "cluster", "replication", "namenode", "datanode",
+    "yarn", "mapreduce", "latency", "throughput", "storage", "io",
+    "job", "task", "block", "failure", "availability", "network",
+    "bandwidth", "cloud", "bigdata", "workload", "trace", "alibaba"
+]
+
+def generate_line(min_words=100, max_words=150):
+    n = random.randint(min_words, max_words)
+    words = [random.choice(WORDS) for _ in range(n)]
+    return " ".join(words) + "\n"
+
+def write_one_file(hdfs_path):
+    # hdfs dfs -put - <path>
+    proc = subprocess.Popen(
+        ["hdfs", "dfs", "-put", "-", hdfs_path],
+        stdin=subprocess.PIPE
+    )
+    bytes_written = 0
+
+    try:
+        while bytes_written < TARGET_BYTES:
+            line = generate_line()
+            data = line.encode("utf-8")
+            proc.stdin.write(data)
+            bytes_written += len(data)
+        proc.stdin.close()
+        ret = proc.wait()
+        if ret != 0:
+            print(f"[ERROR] hdfs dfs -put failed for {hdfs_path} with code {ret}", file=sys.stderr)
+        else:
+            print(f"[OK] Created {hdfs_path} ~ {TARGET_MB} MB")
+    except Exception as e:
+        print(f"[EXCEPTION] While writing {hdfs_path}: {e}", file=sys.stderr)
+        try:
+            proc.kill()
+        except Exception:
+            pass
+
+def main():
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} top10000_day2.txt", file=sys.stderr)
+        sys.exit(1)
+
+    list_file = sys.argv[1]
+    with open(list_file, "r") as f:
+        for line in f:
+            name = line.strip()
+            if not name:
+                continue
+            # Create files in HDFS under /exp/day2/data
+            hdfs_path = f"/exp/day2/data/{name}.txt"
+            write_one_file(hdfs_path)
+
+if __name__ == "__main__":
+    main()
+EOF
+
+chmod +x gen_text_files_hdfs_day2.py

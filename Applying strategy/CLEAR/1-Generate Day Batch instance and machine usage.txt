@@ -1,0 +1,36 @@
+export LC_ALL=C
+
+############################################
+# Day1 extraction
+############################################
+
+# 1) batch_instance -> instances overlapping [0,86400)
+printf 'instance_name,task_name,job_name,task_type,status,start_time,end_time,machine_id,seq_no,total_seq_no,cpu_avg,cpu_max,mem_avg,mem_max\n' \
+  > batch_instance_day1.csv
+awk -F',' -v WSTART=0 -v WEND=86400 \
+  '( ($6 < WEND) && ($7 > WSTART) )' batch_instance.csv >> batch_instance_day1.csv
+
+# 2) machine_usage -> usage points for [0,86400)
+printf 'machine_id,time_stamp,cpu_util_percent,mem_util_percent,mem_gps,mkpi,net_in,net_out,disk_io_percent\n' \
+  > machine_usage_day1.csv
+awk -F',' -v WSTART=0 -v WEND=86400 \
+  '( ($2 >= WSTART) && ($2 < WEND) )' machine_usage.csv >> machine_usage_day1.csv
+
+
+############################################
+# Day2 extraction
+############################################
+
+# Day2 window = [86400,172800)
+
+# 3) batch_instance -> instances overlapping [86400,172800)
+printf 'instance_name,task_name,job_name,task_type,status,start_time,end_time,machine_id,seq_no,total_seq_no,cpu_avg,cpu_max,mem_avg,mem_max\n' \
+  > batch_instance_day2.csv
+awk -F',' -v WSTART=86400 -v WEND=172800 \
+  '( ($6 < WEND) && ($7 > WSTART) )' batch_instance.csv >> batch_instance_day2.csv
+
+# 4) machine_usage -> usage points for [86400,172800)
+printf 'machine_id,time_stamp,cpu_util_percent,mem_util_percent,mem_gps,mkpi,net_in,net_out,disk_io_percent\n' \
+  > machine_usage_day2.csv
+awk -F',' -v WSTART=86400 -v WEND=172800 \
+  '( ($2 >= WSTART) && ($2 < WEND) )' machine_usage.csv >> machine_usage_day2.csv

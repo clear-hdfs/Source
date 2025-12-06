@@ -1,0 +1,27 @@
+python3 - << 'EOF'
+import csv
+
+N = 10000
+rows = []
+
+with open("day2_norm.csv", newline="") as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        try:
+            freq = float(row["freq"])
+        except Exception:
+            continue
+        dataset = row["dataset"].strip()
+        if not dataset:
+            continue
+        rows.append((freq, dataset))
+
+# tri décroissant sur freq
+rows.sort(key=lambda x: x[0], reverse=True)
+
+with open("top10000_day2.txt", "w") as out:
+    for freq, dataset in rows[:N]:
+        out.write(dataset + "\n")
+
+print("Écrit top10000_day2.txt avec", min(N, len(rows)), "lignes")
+EOF

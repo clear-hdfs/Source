@@ -1,0 +1,9 @@
+# 1) Machines used during Day3
+awk -F',' 'NR>1 {print $8}' batch_instance_day3.csv | sort -u > machines_used_day3.txt
+
+# 2) Filter Day3 telemetry on these machines
+printf 'machine_id,time_stamp,cpu_util_percent,mem_util_percent,mem_gps,mkpi,net_in,net_out,disk_io_percent\n' \
+  > machine_usage_day3_used.csv
+awk -F',' 'NR==FNR {used[$1]=1; next} NR==1 {next} ($1 in used) {print}' \
+  machines_used_day3.txt machine_usage_day3.csv >> machine_usage_day3_used.csv
+
