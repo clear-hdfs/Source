@@ -1,4 +1,4 @@
-Project: CLEAR - Clustering based Locality Enhanced Adaptive Replication for HDFS
+Project: CLEAR - Clustering Enabled Enhanced Adaptive Replication for HDFS
 ==============================================================================
 
 All paths below are relative to the project root.  
