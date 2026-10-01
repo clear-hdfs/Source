@@ -1,0 +1,6 @@
+variant,kmax,m_min,K,hot_pct,shared_pct,moderate_pct,archival_pct,storage_overhead
+Reference,500,250,500,4.80,0.80,25.15,69.25,0.6681
+Lower Kmax,250,250,250,2.37,2.30,29.90,65.43,0.6738
+Higher Kmax,750,250,750,5.29,0.87,21.71,72.13,0.6690
+Lower m_min,500,150,500,2.87,0.36,24.98,71.79,0.6539
+Higher m_min,500,350,500,4.41,0.86,20.26,74.46,0.6568

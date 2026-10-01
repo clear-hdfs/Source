@@ -1,0 +1,4 @@
+variant,storage_overhead,storage_reduction_vs_hdfs_pct,shared_files_moved,moved_pct,median_delta_loc,sum_delta_loc
+Full CLEAR,0.6681,33.19,106,2.41,0.060,7.50
+No-placement,0.6681,33.19,0,0.00,0,0
+Fixed-RF,0.5859,41.41,106,2.41,0.060,7.50
